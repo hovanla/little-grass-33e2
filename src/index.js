@@ -73,17 +73,17 @@ async function getPayOSConfig(env, payChannelId) {
 async function getDataMachineByBillId(env, id) {
   const query = await env.DB.prepare(
     `SELECT io_machine.*
-     FROM "transactions"
-     JOIN io_machine ON "transactions".machine_id = io_machine.id
-     WHERE "transactions".bill_id = ?`
+     FROM "transactionss"
+     JOIN io_machine ON "transactionss".machine_id = io_machine.id
+     WHERE "transactionss".bill_id = ?`
   ).bind(id).first();
   return query;
 }
 
-// Hàm đọc transactions
-async function readtransactions(env) {
+// Hàm đọc transactionss
+async function readtransactionss(env) {
   const query = await env.DB.prepare(
-    'SELECT * FROM "transactions" ORDER BY time_create DESC LIMIT 20'
+    'SELECT * FROM "transactionss" ORDER BY time_create DESC LIMIT 20'
   ).all();
   return query.results;
 }
@@ -134,7 +134,7 @@ export default {
           });
         }
         const amountNumber = parseFloat(c3);
-        const billId = Number(String(Date.now()));
+        const billId = Date.now();
         const description = c4 ? `CFPAYOS${c4}` : 'CFPAYOS';
         const config = await getPayOSConfig(env, c1);
         if (!config) {
@@ -145,7 +145,7 @@ export default {
         }
         // Lưu giao dịch vào D1
         await env.DB.prepare(
-          'INSERT INTO "transactions" (bill_id, machine_id, pay_channel, time_create, status) VALUES (?, ?, ?, ?, ?)'
+          'INSERT INTO "transactionss" (bill_id, machine_id, pay_channel, time_create, status) VALUES (?, ?, ?, ?, ?)'
         ).bind(billId, c2, c1, Math.floor(Date.now() / 1000), 'PENDING').run();
 
 
@@ -193,7 +193,7 @@ export default {
         // });
         // }
         const updateResult = await env.DB.prepare(
-          'UPDATE "transactions" SET status = ?, time_pay = ? WHERE bill_id = ?'
+          'UPDATE "transactionss" SET status = ?, time_pay = ? WHERE bill_id = ?'
         ).bind(status, Math.floor(Date.now() / 1000), orderCode).run();
 
         // Check if any rows were affected (i.e., if orderCode exists)
@@ -241,7 +241,7 @@ export default {
     // Route: /logs
     if (method === 'GET' && url.pathname === '/logs') {
       try {
-        const logs = await readtransactions(env);
+        const logs = await readtransactionss(env);
         return new Response(JSON.stringify(logs), {
           headers: { 'Content-Type': 'application/json' },
         });
