@@ -1,6 +1,6 @@
 {
-  "compatibility_date": "2025-04-01",
-  "main": "src/index.ts",
+  "compatibility_date": "2025-04-13",
+  "main": "src/index.js",
   "name": "little-grass-33e2",
   "upload_source_maps": true,
   "d1_databases": [
@@ -12,5 +12,6 @@
   ],
   "observability": {
     "enabled": true
-  }
+  },
+  "compatibility_flags": ["nodejs_compat"]
 }
