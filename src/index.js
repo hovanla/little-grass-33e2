@@ -134,7 +134,7 @@ export default {
           });
         }
         const amountNumber = parseFloat(c3);
-        const billId = String(Date.now());
+        const billId = Date.now();
         const description = c4 ? `CFPAYOS${c4}` : 'CFPAYOS';
         const config = await getPayOSConfig(env, c1);
         if (!config) {
