@@ -146,7 +146,7 @@ export default {
         // Lưu giao dịch vào D1
         await env.DB.prepare(
           'INSERT INTO "transactions" (bill_id, machine_id, pay_channel, time_create, status) VALUES (?, ?, ?, ?, ?)'
-        ).bind(billId, c2, c1, Math.floor(Date.now() / 1000), 'PENDING').run();
+        ).bind(parseInt(billId), c2, c1, Math.floor(Date.now() / 1000), 'PENDING').run();
 
 
         const paymentQrcode = await createPaymentLink(billId, amountNumber, description, config);
